@@ -9,7 +9,7 @@ namespace Correios.NET.Tests
         internal static string GetResourceAsString(string fileName)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var path = string.Format("Correios.NET.Tests.Resources.{0}", fileName);
+            var path = $"Correios.NET.Tests.Resources.{fileName}";
 
             string result;
 

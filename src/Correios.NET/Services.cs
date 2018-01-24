@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Correios.NET.Models;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Correios.NET
 {
@@ -35,20 +36,32 @@ namespace Correios.NET
 
         public async Task<Address> GetAddressAsync(string zipCode)
         {
-            using (var response = await _httpClient.PostAsync(ZIP_ADDRESS_URL, CreateAddressRequest(zipCode)))
+            Address ret;
+            string page = $"https://viacep.com.br/ws/{zipCode}/json/";
+
+            using (HttpClient client = new HttpClient())
+            using (HttpResponseMessage response = await client.GetAsync(page))
+            using (HttpContent content = response.Content)
             {
-                var html = await response.Content.ReadAsStringAsync();
-                return await Task.Run(() => Address.Parse(html));
+                string result = await content.ReadAsStringAsync();
+                ret = JsonConvert.DeserializeObject<Address>(result);
             }
+            return ret;
         }
 
         public Address GetAddress(string zipCode)
         {
-            using (var response = _httpClient.PostAsync(ZIP_ADDRESS_URL, CreateAddressRequest(zipCode)).Result)
+            Address ret;
+            string page = $"https://viacep.com.br/ws/{zipCode}/json/";
+
+            using (var client = new HttpClient())
+            using (var response =  client.GetAsync(page).Result)
+            using (var content = response.Content)
             {
-                var html = response.Content.ReadAsStringAsync().Result;
-                return Address.Parse(html);
+                string result = content.ReadAsStringAsync().Result;
+                ret = JsonConvert.DeserializeObject<Address>(result);
             }
+            return ret;
         }
 
         private static FormUrlEncodedContent CreateAddressRequest(string zipCode)

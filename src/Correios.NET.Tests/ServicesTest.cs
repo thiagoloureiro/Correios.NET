@@ -31,13 +31,23 @@ namespace Correios.NET.Tests
         [Fact]
         public void AddressService_Live_ShouldReturnAddress()
         {
-            const string zipCode = "15025000";
+            const string zipCode = "11441080";
             IServices services = new Services();
             var result = services.GetAddress(zipCode);
 
-            result.ZipCode.Should().Be(zipCode);
-            result.City.Should().Be("São José do Rio Preto");
-            result.State.Should().Be("SP");
+            result.localidade.Should().Be("Guarujá");
+            result.uf.Should().Be("SP");
+        }
+
+        [Fact]
+        public void AddressService_Async_ShouldReturnAddress()
+        {
+            const string zipCode = "11441080";
+            IServices services = new Services();
+            var result = services.GetAddressAsync(zipCode).Result;
+
+            result.localidade.Should().Be("Guarujá");
+            result.uf.Should().Be("SP");
         }
 
         [Fact]
@@ -68,21 +78,6 @@ namespace Correios.NET.Tests
             result.IsDelivered.Should().BeTrue();
         }
 
-        [Fact]
-        public void AddressService_ShouldReturnAddress()
-        {
-            const string zipCode = "15000000";
-            var services = new Moq.Mock<IServices>();
-
-            services.Setup(s => s.GetAddress(zipCode))
-                .Returns(Address.Parse(_addressHtml));
-
-            var result = services.Object.GetAddress(zipCode);
-            result.ZipCode.Should().Be(zipCode);
-            result.Street.Should().Be("Rua de Teste");
-            result.District.Should().Be("Bairro de Teste");
-            result.City.Should().Be("São José do Rio Preto");
-            result.State.Should().Be("SP");
-        }
+       
     }
 }
