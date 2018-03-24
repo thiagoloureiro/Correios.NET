@@ -8,13 +8,11 @@ namespace Correios.NET.Tests
     {
         private readonly string _packageHtml;
         private readonly string _packageDeliveredHtml;
-        private readonly string _addressHtml;
 
         public ServicesTest()
         {
             _packageHtml = ResourcesReader.GetResourceAsString("Pacote.html");
             _packageDeliveredHtml = ResourcesReader.GetResourceAsString("PacoteEntregue.html");
-            _addressHtml = ResourcesReader.GetResourceAsString("Endereco.html");
         }
 
         [Fact]
